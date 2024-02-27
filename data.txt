@@ -1,28 +1,59 @@
-<div class="container">
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-    <div class="card">
-        <div class="card-header">
-            User Registration Page
-        </div>
-        <div class="card-body">
-            <form (ngSubmit)="addUser(data)" #data=ngForm>
-                UserName:<input type="text" required name="uname" ngModel #un=ngModel/>
-                <div *ngIf="un.invalid">UserName cant be empty</div>
-                Password:<input type="password" name="pass" ngModel required minlength="6" #pa=ngModel/>
-                <div *ngIf="pa.invalid &&(pa.dirty || pa.touched)">
-                    <div *ngIf="pa.errors?.['required']">Password cant be empty</div>
-                    <div *ngIf="pa.errors?.['minlength']">Pasword must be min 6 char long</div>
-                </div>
-                Email:<input type="email" name="email" ngModel required email #em=ngModel/>
-                <div *ngIf="em.invalid">
-                    <div *ngIf="em.errors?.['required']">Email cant be empty</div>
-                    <div *ngIf="em.errors?.['email']">Email must be formatted</div>
-                </div>
-                
-                City:<input type="text" name="city" ngModel />
-                <button class="btn btn-primary">Register</button>
+@Component({
+  selector: 'app-ddform',
+  templateUrl: './ddform.component.html',
+  styleUrls: ['./ddform.component.css']
+})
+export class DdformComponent {
+  // works like ngForm
+  myform: FormGroup
+  //form controls
+  uname: FormControl
+  pass: FormControl
+  email: FormControl
+  city: FormControl
 
-            </form>
-        </div>
-    </div>
-</div>
+  constructor(){
+    this.createControls()
+    this.createForm()
+  }
+  //maintain relationship
+  createForm() {
+    this.myform = new FormGroup({
+      uname: this.uname,
+      pass: this.pass,
+      email: this.email,
+      city: this.city
+    })
+  }
+  // define controls
+
+  createControls() {
+    this.uname = new FormControl('',Validators.required)
+    this.pass = new FormControl('',[Validators.required,Validators.minLength(6)])
+    this.email = new FormControl('',[Validators.required,Validators.email,this.emailDomainValidator])
+    this.city = new FormControl('')
+  }
+
+  addUser() {
+console.log(this.myform.value);
+
+  }
+  emailDomainValidator(control:FormControl){
+    let email= control.value
+    if(email && email.indexOf('@')!=-1) {
+      let[_,domain]= email.split('@')
+      if(domain !== "yahoo.com"){
+        return {
+          emailDomain:{
+            parsedDomain:domain
+          }
+        }
+      }
+
+    }
+    return null
+  }
+}
