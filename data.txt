@@ -8,8 +8,11 @@
             <form (ngSubmit)="addUser(data)" #data=ngForm>
                 UserName:<input type="text" required name="uname" ngModel #un=ngModel/>
                 <div *ngIf="un.invalid">UserName cant be empty</div>
-                Password:<input type="password" name="pass" ngModel/>
-
+                Password:<input type="password" name="pass" ngModel required minlength="6" #pa=ngModel/>
+                <div *ngIf="pa.invalid &&(pa.dirty || pa.touched)">
+                    <div *ngIf="pa.errors?.['required']">Password cant be empty</div>
+                    <div *ngIf="pa.errors?.['minlength']">Pasword must be min 6 char long</div>
+                </div>
                 Email:<input type="email" name="email" ngModel required email #em=ngModel/>
                 <div *ngIf="em.invalid">
                     <div *ngIf="em.errors?.['required']">Email cant be empty</div>
