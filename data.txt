@@ -57,3 +57,38 @@ console.log(this.myform.value);
     return null
   }
 }
+
+
+
+
+-----------------
+
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-header">
+          DataDriven  User Registration Page
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="addUser()" [formGroup]="myform"  >
+                UserName:<input type="text" formControlName="uname"  />
+                <div *ngIf="uname.invalid">UserName cant be empty</div>
+
+                Password:<input type="password" name="pass"  formControlName="pass"  />
+                
+                Email:<input type="email" name="email"  formControlName="email" />
+                
+                <div *ngIf="email.invalid">
+                    <div *ngIf="email.errors?.['required']">Email cant be empty</div>
+                    <div *ngIf="email.errors?.['email']">Email must be formatted</div>
+                    <div *ngIf="email.errors?.['emailDomain']">Email Must be Yahoo.com</div>
+                </div>
+
+                City:<input type="text" name="city"   formControlName="city"/>
+                <button class="btn btn-primary">Register</button>
+
+            </form>
+        </div>
+    </div>
+</div>
