@@ -1,94 +1,41 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { createReducer, on } from "@ngrx/store";
+import { Movie } from "src/app/Models/movie";
+import { getMovie } from "../actions/movie.action";
 
-@Component({
-  selector: 'app-ddform',
-  templateUrl: './ddform.component.html',
-  styleUrls: ['./ddform.component.css']
-})
-export class DdformComponent {
-  // works like ngForm
-  myform: FormGroup
-  //form controls
-  uname: FormControl
-  pass: FormControl
-  email: FormControl
-  city: FormControl
 
-  constructor(){
-    this.createControls()
-    this.createForm()
-  }
-  //maintain relationship
-  createForm() {
-    this.myform = new FormGroup({
-      uname: this.uname,
-      pass: this.pass,
-      email: this.email,
-      city: this.city
-    })
-  }
-  // define controls
-
-  createControls() {
-    this.uname = new FormControl('',Validators.required)
-    this.pass = new FormControl('',[Validators.required,Validators.minLength(6)])
-    this.email = new FormControl('',[Validators.required,Validators.email,this.emailDomainValidator])
-    this.city = new FormControl('')
-  }
-
-  addUser() {
-console.log(this.myform.value);
-
-  }
-  emailDomainValidator(control:FormControl){
-    let email= control.value
-    if(email && email.indexOf('@')!=-1) {
-      let[_,domain]= email.split('@')
-      if(domain !== "yahoo.com"){
-        return {
-          emailDomain:{
-            parsedDomain:domain
-          }
-        }
-      }
-
-    }
-    return null
-  }
+export interface MovieState{
+    movies: ReadonlyArray<Movie>
 }
+const initialState:ReadonlyArray<Movie>=[]
 
+export const movieReducer=createReducer(
+    initialState,
+    on(getMovie,(state)=> [...mockMovies()])
+)
 
+function mockMovies(): Movie[] {
+    const movie = new Movie(
+      'Avengers: Endgame',
+      2798,
+      new Date('26 Apr, 2019 05:30:00')
+    );
+    movie.id = 1;
 
+    const movie1 = new Movie(
+      'Avengers: Infinity War',
+      2048,
+      new Date('27 Apr, 2018 05:30:00')
+    );
+    movie1.id = 2;
 
------------------
+    const movie2 = new Movie(
+      'Age of Ultron',
+      1403,
+      new Date('01 May, 2015 05:30:00')
+    );
+    movie2.id = 3;
 
+    const movies = [movie, movie1, movie2];
+    return movies;
+  }
 
-<div class="container">
-
-    <div class="card">
-        <div class="card-header">
-          DataDriven  User Registration Page
-        </div>
-        <div class="card-body">
-            <form (ngSubmit)="addUser()" [formGroup]="myform"  >
-                UserName:<input type="text" formControlName="uname"  />
-                <div *ngIf="uname.invalid">UserName cant be empty</div>
-
-                Password:<input type="password" name="pass"  formControlName="pass"  />
-                
-                Email:<input type="email" name="email"  formControlName="email" />
-                
-                <div *ngIf="email.invalid">
-                    <div *ngIf="email.errors?.['required']">Email cant be empty</div>
-                    <div *ngIf="email.errors?.['email']">Email must be formatted</div>
-                    <div *ngIf="email.errors?.['emailDomain']">Email Must be Yahoo.com</div>
-                </div>
-
-                City:<input type="text" name="city"   formControlName="city"/>
-                <button class="btn btn-primary">Register</button>
-
-            </form>
-        </div>
-    </div>
-</div>
