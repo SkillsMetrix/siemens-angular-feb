@@ -1,24 +1,31 @@
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { DataService } from "../data.service";
- import { getMovie, getMovieSuccess } from "src/app/store/actions/movie.action";
-import {exhaustMap, map } from "rxjs/operators";
-import { Injectable } from "@angular/core";
+import { Directive, ElementRef, Renderer2 } from '@angular/core';
 
-
-@Injectable({
-    providedIn:"root"
+@Directive({
+  selector: '[appColor]',
+  standalone: true
 })
-export class MovieEffects {
-    constructor(private action$: Actions, private dataService: DataService) { }
-    loadMovies$ = createEffect(() =>
-        this.action$.pipe(
-            ofType(getMovie),
-            exhaustMap(() =>
-                this.dataService.getMovies().pipe(
-                    map((movies) => getMovieSuccess(movies)),
-                    
-                )
-            )
-        )
-    )
+export class ColorDirective {
+  private color='plum'
+  constructor(private er:ElementRef,private ren:Renderer2){}
+     ngOnInit(): void {
+         this.ren.setStyle(this.er.nativeElement,'color',this.color)
+     }
+
+}
+
+
+
+
+import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
+
+@Directive({
+  selector: '[appFontWt]',
+  standalone: true
+})
+export class FontWtDirective implements OnInit {
+private weight='bold'
+constructor(private er:ElementRef,private ren:Renderer2){}
+   ngOnInit(): void {
+       this.ren.setStyle(this.er.nativeElement,'font-weight',this.weight)
+   }
 }
