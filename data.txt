@@ -1,31 +1,28 @@
-import { Directive, ElementRef, Renderer2 } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Directive({
-  selector: '[appColor]',
-  standalone: true
-})
-export class ColorDirective {
-  private color='plum'
-  constructor(private er:ElementRef,private ren:Renderer2){}
-     ngOnInit(): void {
-         this.ren.setStyle(this.er.nativeElement,'color',this.color)
-     }
+import { MyappComponent } from './myapp.component';
 
-}
+describe('MyappComponent', () => {
+  let component: MyappComponent;
+  let fixture: ComponentFixture<MyappComponent>;
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [MyappComponent]
+    });
+    fixture = TestBed.createComponent(MyappComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-
-
-import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
-
-@Directive({
-  selector: '[appFontWt]',
-  standalone: true
-})
-export class FontWtDirective implements OnInit {
-private weight='bold'
-constructor(private er:ElementRef,private ren:Renderer2){}
-   ngOnInit(): void {
-       this.ren.setStyle(this.er.nativeElement,'font-weight',this.weight)
-   }
-}
+  it('should create', () => {
+    expect(component).toBeTruthy();
+    expect(component.uname).toEqual('admin')
+  });
+  it('check the value of DOM',()=>{
+    let compiled= fixture.debugElement.nativeElement.querySelector('h1')
+    fixture.detectChanges()
+    //expect(compiled.querySelector('h1').textContent).toContain('admin')
+    expect(component.uname).toBe(compiled.textContent)
+  })
+});
